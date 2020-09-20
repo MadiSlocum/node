@@ -5,14 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var cors = require("cors")
-//var bodyParser = require("body-parser")
+var app = express();
+process.env.PORT = 8080;
 
 var indexRouter = require('./routes/index.js');
 var coursesRouter = require('./routes/courses.js');
-//var departmentRouter = require('./routes/department.js');
+var departmentRouter = require('./routes/department.js');
 
-process.env.PORT = 8080;
-var app = express();
 
 const cor = cors({
   origin: function(origin, callback) {
@@ -36,36 +35,18 @@ app.use(express.static(path.join(__dirname, 'public')));
 const mysql = require("mysql");
 app.use(function(req, res, next) {
   res.locals.connection = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Madi123!",
+    host: "t3-database.cwre8cvv6tyn.us-west-1.rds.amazonaws.com",
+    user: "admin",
+    password: "passwordt3",
     database: "courses"
   });
   res.locals.connection.connect();
   next();
 });
-/*const dbConfig = require("./db.config.js");
-const { ppid } = require('process');
-
-// Create a connection to the database
-const connection = mysql.createConnection({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB
-});
-
-// open the MySQL connection
-connection.connect(error => {
-  if (error) throw error;
-  console.log("Successfully connected to the database.");
-});
-
-module.exports = connection;*/
 
 app.use("/courseapi/", indexRouter);
 app.use("/courseapi/courses", coursesRouter);
-//app.use("/courseapi/courses/department", departmentRouter);
+app.use("/courseapi/dept", departmentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -82,5 +63,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
