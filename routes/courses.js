@@ -1,8 +1,6 @@
 var express = require("express");
 var router = express.Router();
 
-/* GET courses */
-
 function validate(course) {
   var errorMessage = "[";
 
@@ -32,16 +30,17 @@ function validate(course) {
 }
 
 
-/* GET course listing. */
+/* http://localhost:8080/courseapi/courses/.  THIS LISTS ALL INFO*/
+
 router.get('/', function(req, res, next) {
   var offset;
   var limit;
   if (req.query.page == null) offset = 0;
   else offset = parseInt(req.query.page);
-  if (req.query.per_page == null) limit = 20;
+  if (req.query.per_page == null) limit = 200;
   else limit = parseInt(req.query.per_page);
   res.locals.connection.query(
-    "SELECT * FROM course LIMIT ? OFFSET ?",
+    "SELECT * FROM course",
     [limit, offset],
     function(error, results, fields) {
       if (error) {
@@ -59,6 +58,7 @@ router.get('/', function(req, res, next) {
 });
 
 
+/* http://localhost:8080/courseapi/courses/3149  THIS LISTS ALL INFO ON ONE COURSE ID*/
 router.get("/:id", function(req, res, next) {
   var id = req.params.id;
   res.locals.connection.query("SELECT * FROM course WHERE id=?", id, function(error, results, fields) {
@@ -74,6 +74,9 @@ router.get("/:id", function(req, res, next) {
     res.locals.connection.end();
   });
 });
+
+
+
 router.put("/:id", function(req, res, next) {
   var id = req.params.id;
   var course = req.body;
@@ -129,6 +132,8 @@ router.post("/", function(req, res, next) {
     );
   }
 });
+
+/* Works perfectly to delete a specific id of a course. DEL: localhost:8080/courseapi/courses/3148*/
 
 router.delete("/:id", function(req, res, next) {
   var id = req.params.id;
