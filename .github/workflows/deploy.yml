@@ -22,7 +22,7 @@ jobs:
               env:
                   NAME: 'Root'
               with:
-                  hosts: 'ubuntu@team0.eaglesoftwareteam.com'
+                  hosts: 'ubuntu@team3.eaglesoftwareteam.com'
                   privateKey: ${{ secrets.SERVER_SSH_KEY }}
                   debug: false
                   command: |
