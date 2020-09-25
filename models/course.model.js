@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
       dept: {
         type: Sequelize.STRING,
       },
-      number: {
+      course_number: {
         type: Sequelize.STRING,
       },
       level: {

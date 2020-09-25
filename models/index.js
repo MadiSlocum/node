@@ -11,6 +11,9 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     min: dbConfig.pool.min,
     acquire: dbConfig.pool.acquire,
     idle: dbConfig.pool.idle
+  },
+  define: {
+    timestamps: false
   }
 });
 
@@ -19,6 +22,6 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.tutorials = require("./course.model.js")(sequelize, Sequelize);
+db.course = require("./course.model.js")(sequelize, Sequelize);
 
 module.exports = db;

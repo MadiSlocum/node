@@ -19,9 +19,7 @@ db.sequelize.sync();
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 require("./routes/course.routes")(app);

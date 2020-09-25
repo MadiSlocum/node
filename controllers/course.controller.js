@@ -15,7 +15,7 @@ exports.create = (req, res) => {
     const course = {
         id: req.body.id,
         dept: req.body.dept,
-        number: req.body.course_number,
+        course_number: req.body.course_number,
         level: req.body.level,
         hours: req.body.hours,
         name: req.body.name,
