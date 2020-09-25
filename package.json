@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node server.js",
     "bundle": "mkdir deploy && cp -r db.config.js controllers models routes server.js package.json package-lock.json course-backend.service deploy"
   },
   "dependencies": {
