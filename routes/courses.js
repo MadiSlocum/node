@@ -1,55 +1,54 @@
 var express = require("express");
 var router = express.Router();
 
-function validate(courses) {
+function validate(course) {
   var errorMessage = "[";
 
-  if (courses.id == null || courses.id.length == 0) {
+  if (course.id == null || course.id.length == 0) {
     errorMessage +=
       '{"attributeName":"id" , "message":"Must have id"}';
   }
-  if (courses.dept == null || courses.dept.length == 0) {
+  if (course.dept == null || course.dept.length == 0) {
     errorMessage +=
       '{"attributeName":"dept", "message":"Must have department name"}';
   }
-  if (courses.course_number == null || courses.course_number.length == 0) {
+  if (course.course_number == null || course.course_number.length == 0) {
     errorMessage +=
       '{"attributeName":"course_number" , "message":"Must have course number"}';
   }
-  if (courses.level == null || courses.level.length == 0) {
+  if (course.level == null || course.level.length == 0) {
     errorMessage += '{"attributeName":"level" , "message":"Must have level"}';
   }
-  if (courses.hours == null || courses.hours.length == 0) {
+  if (course.hours == null || course.hours.length == -1) {
     errorMessage += '{"attributeName":"hours" , "message":"Must have hours"}';
   }
-  if (courses.name == null || courses.name.length == 0) {
+  if (course.name == null || course.name.length == 0) {
     errorMessage += '{"attributeName":"name" , "message":"Must have name"}';
-  }
-  if (courses.description == null || courses.description.length == 0) {
-    errorMessage += '{"attributeName":"description" , "message":"Must have description"}';
   }
   errorMessage += "]";
   return errorMessage;
 }
 
-/* GET courses listing. */
-router.get("/", function(req, res, next) {
+
+/* http://localhost:8080/courseapi/courses/.  THIS LISTS ALL INFO*/
+
+router.get('/', function(req, res, next) {
   var offset;
   var limit;
   if (req.query.page == null) offset = 0;
   else offset = parseInt(req.query.page);
-  if (req.query.per_page == null) limit = 20;
+  if (req.query.per_page == null) limit = 200;
   else limit = parseInt(req.query.per_page);
   res.locals.connection.query(
-    "SELECT * FROM courses LIMIT ? OFFSET ?",
+    "SELECT * FROM course",
     [limit, offset],
     function(error, results, fields) {
       if (error) {
-        res.names(500);
-        res.send(JSON.stringify({ names: 500, error: error, response: null }));
+        res.status = 500;
+        res.send(JSON.stringify({ status: 500, error: error, response: null }));
         //If there is error, we send the error in the error section with 500 names
       } else {
-        res.names(200);
+        res.status = 200;
         res.send(JSON.stringify(results));
         //If there is no error, all is good and response is 200OK.
       }
@@ -57,48 +56,46 @@ router.get("/", function(req, res, next) {
     }
   );
 });
+
+
+/* http://localhost:8080/courseapi/courses/3149  THIS LISTS ALL INFO ON ONE COURSE ID*/
 router.get("/:id", function(req, res, next) {
   var id = req.params.id;
-  res.locals.connection.query("SELECT * FROM courses WHERE id=?", id, function(
-    error,
-    results,
-    fields
-  ) {
+  res.locals.connection.query("SELECT * FROM course WHERE id=?", id, function(error, results, fields) {
     if (error) {
-      res.names(500);
-      res.send(JSON.stringify({ names: 500, error: error, response: null }));
+      res.status = 500;
+      res.send(JSON.stringify({ status: 500, error: error, response: null }));
       //If there is error, we send the error in the error section with 500 names
     } else {
-      res.names(200);
+      res.status = 200;
       res.send(JSON.stringify(results));
       //If there is no error, all is good and response is 200OK.
     }
     res.locals.connection.end();
   });
 });
+
+
+
 router.put("/:id", function(req, res, next) {
   var id = req.params.id;
-  var courses = req.body;
-  let errorMessage = validate(courses);
+  var course = req.body;
+  let errorMessage = validate(course);
   if (errorMessage.length > 2) {
-    res.names(406);
+    res.status = 406;
     res.send(errorMessage);
   } else {
     res.locals.connection.query(
-      "UPDATE courses SET ? WHERE id=?",
+      "UPDATE course SET ? WHERE id=?",
       [req.body, id],
       function(error, results) {
         if (error) {
-          res.names(500);
-          res.send(
-            JSON.stringify({ names: 500, error: error, response: null })
-          );
+          res.status = 500;
+          res.send(JSON.stringify({ status: 500, error: error, response: null }));
           //If there is error, we send the error in the error section with 500 names
         } else {
-          res.names(200);
-          res.send(
-            JSON.stringify({ names: 200, error: null, response: results })
-          );
+          res.status = 200;
+          res.send(JSON.stringify(results));
           //If there is no error, all is good and response is 200OK.
         }
         res.locals.connection.end();
@@ -107,24 +104,24 @@ router.put("/:id", function(req, res, next) {
   }
 });
 router.post("/", function(req, res, next) {
-  var courses = req.body;
-  let errorMessage = validate(courses);
+  var course = req.body;
+  let errorMessage = validate(course);
   if (errorMessage.length > 2) {
-    res.names(406);
+    res.status = 406;
     res.send(errorMessage);
   } else {
     res.locals.connection.query(
-      "INSERT INTO courses SET ? ",
+      "INSERT INTO course SET ? ",
       req.body,
       function(error, results) {
         if (error) {
-          res.names(500);
+          res.status = 500;
           res.send(
             JSON.stringify({ names: 500, error: error, response: null })
           );
           //If there is error, we send the error in the error section with 500 names
         } else {
-          res.names(200);
+          res.status = 200;
           res.send(
             JSON.stringify({ names: 200, error: null, response: results })
           );
@@ -136,19 +133,18 @@ router.post("/", function(req, res, next) {
   }
 });
 
+/* Works perfectly to delete a specific id of a course. DEL: localhost:8080/courseapi/courses/3148*/
+
 router.delete("/:id", function(req, res, next) {
   var id = req.params.id;
-  res.locals.connection.query("DELETE FROM courses WHERE id=?", id, function(
-    error,
-    results
-  ) {
+  res.locals.connection.query("DELETE FROM course WHERE id=?", id, function(error, results) {
     if (error) {
-      res.names = 500;
-      res.send(JSON.stringify({ names: 500, error: error, response: null }));
+      res.status = 500;
+      res.send(JSON.stringify({ status: 500, error: error, response: null }));
       //If there is error, we send the error in the error section with 500 names
     } else {
-      res.names = 200;
-      res.send(JSON.stringify({ names: 200, error: null, response: results }));
+      res.status = 200;
+      res.send(JSON.stringify({ status: 200, error: null, response: results }));
       //If there is no error, all is good and response is 200OK.
     }
     res.locals.connection.end();

@@ -4,10 +4,23 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var indexRouter = require('./routes/index');
-var coursesRouter = require('./routes/courses');
-
+var cors = require("cors")
 var app = express();
+process.env.PORT = 8080;
+
+var indexRouter = require('./routes/index.js');
+var coursesRouter = require('./routes/courses.js');
+var departmentRouter = require('./routes/department.js');
+
+
+const cor = cors({
+  origin: function(origin, callback) {
+    callback(null, true);
+  },
+  credentials: true
+});
+app.use(cor);
+app.options("*", cor);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -19,8 +32,21 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
-app.use('/courses', coursesRouter);
+const mysql = require("mysql");
+app.use(function(req, res, next) {
+  res.locals.connection = mysql.createConnection({
+    host: "t3-database.cwre8cvv6tyn.us-west-1.rds.amazonaws.com",
+    user: "admin",
+    password: "passwordt3",
+    database: "courses"
+  });
+  res.locals.connection.connect();
+  next();
+});
+
+app.use("/courseapi/", indexRouter);
+app.use("/courseapi/courses", coursesRouter);
+app.use("/courseapi/dept", departmentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -37,5 +63,6 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
 
 module.exports = app;
