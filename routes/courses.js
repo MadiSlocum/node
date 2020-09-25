@@ -35,9 +35,9 @@ function validate(course) {
 router.get('/', function(req, res, next) {
   var offset;
   var limit;
-  if (req.query.page == null) offset = 0;
+  if (req.query.page == null) offset = 90;
   else offset = parseInt(req.query.page);
-  if (req.query.per_page == null) limit = 200;
+  if (req.query.per_page == null) limit = 3000;
   else limit = parseInt(req.query.per_page);
   res.locals.connection.query(
     "SELECT * FROM course",
