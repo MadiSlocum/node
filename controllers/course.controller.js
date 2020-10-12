@@ -1,6 +1,21 @@
 const db = require("../models");
 const Course = db.course;
 const Op = db.Sequelize.Op;
+const getPagination = (page, size) => {
+    const limit = size ? +size : 3;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+};
+
+const getPagingData = (data, page, limit) => {
+    const { count: totalItems, rows: courses } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, courses, totalPages, currentPage };
+  };
+
 
 // Create and Save a new Course
 exports.create = (req, res) => {
@@ -22,23 +37,6 @@ exports.create = (req, res) => {
         description: req.body.description
     };
 
-    // Pagination
-    const getPagination = (page, size) => {
-        const limit = size ? +size : 3;
-        const offset = page ? page * limit : 0;
-      
-        return { limit, offset };
-    };
-
-    const getPagingData = (data, page, limit) => {
-        const { count: totalItems, rows: courses } = data;
-        const currentPage = page ? +page : 0;
-        const totalPages = Math.ceil(totalItems / limit);
-      
-        return { totalItems, courses, totalPages, currentPage };
-      };
-    
-
     // Save Course in the database
     Course.create(course)
     .then(data => {
@@ -58,7 +56,7 @@ exports.findAll = (req, res) => {
 
     const {limit, offset } = getPagination(page, size);
 
-    Course.findAndCountAll({ where: condition, limit, offset })
+    Course.findAndCountAll({ limit:limit, offset:offset })
     .then(data => {
         const response = getPagingData(data, page, limit);
         res.send(response);
