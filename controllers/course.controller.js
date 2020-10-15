@@ -1,6 +1,7 @@
 const db = require("../models");
 const Course = db.course;
 const Op = db.Sequelize.Op;
+
 const getPagination = (page, size) => {
     const limit = size ? +size : 3;
     const offset = page ? page * limit : 0;
@@ -56,8 +57,10 @@ exports.findAll = (req, res) => {
 
     const {limit, offset } = getPagination(page, size);
 
-    Course.findAndCountAll({ limit:limit, offset:offset })
+    Course.findAndCountAll({where: condition, limit:limit, offset:offset })
+    
     .then(data => {
+
         const response = getPagingData(data, page, limit);
         res.send(response);
     })
@@ -66,6 +69,7 @@ exports.findAll = (req, res) => {
             message: err.message || "Some error occurred while retrieving courses."
         });
     });
+    
 };
 
 // Find a single Course with an id
