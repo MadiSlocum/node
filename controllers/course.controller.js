@@ -35,7 +35,8 @@ exports.create = (req, res) => {
         level: req.body.level,
         hours: req.body.hours,
         name: req.body.name,
-        description: req.body.description
+        description: req.body.description,
+        when_off: req.body.when_off
     };
 
     // Save Course in the database
