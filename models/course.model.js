@@ -22,6 +22,9 @@ module.exports = (sequelize, Sequelize) => {
       },
       description: {
         type: Sequelize.STRING
+      },
+      when_off: {
+        type: Sequelize.STRING
       }
     }, {
       tableName: 'course'
