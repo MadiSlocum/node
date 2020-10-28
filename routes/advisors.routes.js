@@ -18,6 +18,9 @@ module.exports = app => {
     // Delete an Advisor with id
     router.delete("/:id", Advisor.delete);
 
+    // Delete all Advisors
+    router.delete("/", Advisor.deleteAll);
   
-    app.use('/api/advisor', router);
+  
+    app.use('/api/advisors', router);
 }; 
