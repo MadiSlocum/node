@@ -1,6 +1,5 @@
 const db = require("../models");
 const Semester = db.semester;
-const Op = db.Sequelize.Op;
 
 const getPagination = (page, size) => {
     const limit = size ? +size : 3;
@@ -29,7 +28,7 @@ exports.create = (req, res) => {
 
     // Create a Semester
     const semester = {
-        id: req.body.id,
+        semester_id: req.body.semester_id,
         semester_name: req.body.semester_name,
         start_date: req.body.start_date,
         end_date: req.body.end_date,
@@ -49,12 +48,11 @@ exports.create = (req, res) => {
 
 // Retrieve all Semesters from the database.
 exports.findAll = (req, res) => {
-    const { page, size, semester_name } = req.query;
-    var condition = semester_name ? { semester_name: { [Op.like]: `%${semester_name}%` } } : null;
+    const { page, size } = req.query;
 
     const {limit, offset } = getPagination(page, size);
 
-    Course.findAndCountAll({where: condition, limit:limit, offset:offset })
+    Semester.findAndCountAll({ limit:limit, offset:offset })
     
     .then(data => {
 
@@ -63,7 +61,7 @@ exports.findAll = (req, res) => {
     })
     .catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while retrieving semesters."
+            message: err.message || "Some error occurred while retrieving Semesters."
         });
     });
     
@@ -73,7 +71,7 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Course.findByPk(id)
+    Semester.findByPk(id)
     .then(data => {
         res.send(data);
     })
@@ -88,9 +86,9 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    Course.update(req.body, {
+    Semester.update(req.body, {
         where: {
-            id: id
+            semester_id: id
         }
     })
     .then(num => {
@@ -117,7 +115,7 @@ exports.delete = (req, res) => {
 
     Semester.destroy({
         where: {
-            id: id
+            semester_id: id
         }
     })
     .then(num => {
@@ -138,7 +136,7 @@ exports.delete = (req, res) => {
     });
 };
 
-// Delete all Courses from the database.
+// Delete all Semesters from the database.
 exports.deleteAll = (req, res) => {
     Semester.destroy({
         where: {},
@@ -151,7 +149,7 @@ exports.deleteAll = (req, res) => {
     })
     .catch(err => {
         res.status(500).send({
-            message: err.message || "Some error occurred while removing all semesters."
+            message: err.message || "Some error occurred while removing all Semesters."
         });
     });
 };
