@@ -40,8 +40,10 @@ exports.create = (req, res) => {
         res.send(data);
     })
     .catch(err => {
+        console.log (err.errors);
         res.status(500).send({
             message: err.message || "Some error occurred while creating the Semester."
+        
         });
     });
 };
