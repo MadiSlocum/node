@@ -56,6 +56,7 @@ exports.findAll = (req, res) => {
     const {limit, offset } = getPagination(page, size);
 
     Student.findAndCountAll({ limit:limit, offset:offset })
+
     
     .then(data => {
 

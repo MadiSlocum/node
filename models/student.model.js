@@ -15,13 +15,13 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
       },
       advisor_id: {
-        type: Sequelize.STRING,
+        type: Sequelize.INTEGER,
       },
       graduation_date: {
-        type: Sequelize.STRING,
+        type: Sequelize.DATE,
       },
       email: {
-        type: Sequelize.INTEGER
+        type: Sequelize.STRING
       }
     }, {
       tableName: 'students'
