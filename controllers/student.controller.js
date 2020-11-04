@@ -73,26 +73,26 @@ exports.findAll = (req, res) => {
 
 // Find a single Student with an id
 exports.findOne = (req, res) => {
-    const id = req.params.id;
+    const student_id = req.params.student_id;
 
-    Student.findByPk(id)
+    Student.findByPk(student_id)
     .then(data => {
         res.send(data);
     })
     .catch(err => {
         res.status(500).send({
-            message: "Error retrieving Student with id=" + id
+            message: "Error retrieving Student with id=" + student_id
         });
     });
 };
 
 // Update a Student by the id in the request
 exports.update = (req, res) => {
-    const id = req.params.id;
+    const student_id = req.params.student_id;
 
     Student.update(req.body, {
         where: {
-            student_id: id
+            student_id: student_id
         }
     })
     .then(num => {
@@ -102,24 +102,24 @@ exports.update = (req, res) => {
             });
         } else {
             res.send({
-                message: `Cannot update Student with id=${id}. Maybe Student was not found or req.body is empty!`
+                message: `Cannot update Student with id=${student_id}. Maybe Student was not found or req.body is empty!`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
-            message: "Error updating Student with id=" + id
+            message: "Error updating Student with id=" + student_id
         });
     });
 };
 
 // Delete a Student with the specified id in the request
 exports.delete = (req, res) => {
-    const id = req.params.id;
+    const student_id = req.params.student_id;
 
     Student.destroy({
         where: {
-            student_id: id
+            student_id: student_id
         }
     })
     .then(num => {
@@ -129,13 +129,13 @@ exports.delete = (req, res) => {
             });
         } else {
             res.send({
-                message: `Cannot delete Student with id=${id}. Maybe Student was not found!`
+                message: `Cannot delete Student with id=${student_id}. Maybe Student was not found!`
             });
         }
     })
     .catch(err => {
         res.status(500).send({
-            message: "Could not delete Student with id=" + id
+            message: "Could not delete Student with id=" + student_id
         });
     });
 };
