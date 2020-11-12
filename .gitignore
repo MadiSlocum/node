@@ -122,4 +122,4 @@ Blog
 About
 
 # Database Config
-db.config.js
+config/db.config.js
