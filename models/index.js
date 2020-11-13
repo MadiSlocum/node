@@ -28,5 +28,6 @@ db.major = require("./major.model.js")(sequelize, Sequelize);
 db.majorcourse = require("./majorcourse.model.js")(sequelize, Sequelize);
 db.advisor = require("./advisors.model.js")(sequelize, Sequelize);
 db.student = require("./student.model.js")(sequelize, Sequelize);
+db.courses_for_student = require("./stucourse.model.js")(sequelize, Sequelize);
 
 module.exports = db;
