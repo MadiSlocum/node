@@ -39,7 +39,7 @@ exports.findAll = (req, res) => {
         }
     } : null;
 
-    MajorCourse.findAll({ where: condition })
+    MajorCourse.findAll({include:["course", "major"], where: condition })
     
     .then(data => {
         res.send(data);
