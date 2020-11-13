@@ -53,11 +53,11 @@ db.student.hasMany(db.courses_for_student, {
   foreignKey: 'student_id'
 });
 db.courses_for_student.belongsTo(db.course, {
-  foreignKey: 'course_id' //problem?
+  foreignKey: 'course_id' 
 });
 db.semesters.hasMany(db.courses_for_student, {
   as: 'courses_for_student',
-  foreignKey: 'semester_id' //problem?
+  foreignKey: 'semester_id' 
 });
 
 db.course.hasMany(db.courses_for_student, {
@@ -65,6 +65,6 @@ db.course.hasMany(db.courses_for_student, {
   foreignKey: 'course_id'
 });
 
-
-
 module.exports = db;
+
+//sequelize relationships found at https://sequelize.org/master/manual/assocs.html
