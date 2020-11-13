@@ -23,7 +23,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.course = require("./course.model.js")(sequelize, Sequelize);
-db.semester = require("./semester.model.js")(sequelize, Sequelize);
+db.semesters = require("./semester.model.js")(sequelize, Sequelize);
 db.major = require("./major.model.js")(sequelize, Sequelize);
 db.majorcourse = require("./majorcourse.model.js")(sequelize, Sequelize);
 db.advisor = require("./advisors.model.js")(sequelize, Sequelize);
@@ -34,9 +34,7 @@ db.course.hasMany(db.majorcourse, {
   as: 'majorcourse',
   foreignKey: 'id'
 });
-db.majorcourse.belongsTo(db.course, {
-  foreignKey: 'id'
-});
+
 db.major.hasMany(db.majorcourse, {
   as: 'majorcourse',
   foreignKey: 'major_id'
@@ -44,4 +42,29 @@ db.major.hasMany(db.majorcourse, {
 db.majorcourse.belongsTo(db.major, {
   foreignKey: 'major_id'
 });
+//db.courses_for_student.belongsTo(db.semesters, {
+  //foreignKey: 'semester'
+//});
+db.courses_for_student.belongsTo(db.student, {
+  foreignKey: 'student_id'
+});
+db.student.hasMany(db.courses_for_student, {
+  as: 'courses_for_student',
+  foreignKey: 'student_id'
+});
+db.courses_for_student.belongsTo(db.course, {
+  foreignKey: 'course_id' //problem?
+});
+db.semesters.hasMany(db.courses_for_student, {
+  as: 'courses_for_student',
+  foreignKey: 'semester_id' //problem?
+});
+
+db.course.hasMany(db.courses_for_student, {
+  as: 'courses_for_student',
+  foreignKey: 'course_id'
+});
+
+
+
 module.exports = db;
