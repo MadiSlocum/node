@@ -18,5 +18,5 @@ module.exports = app => {
     // Delete a Stu Course with id
     router.delete("/:id", StuCourses.delete);
   
-    app.use('/api/courseplan', router);
+    app.use('/api/studentcourses', router);
 };
