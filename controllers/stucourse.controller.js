@@ -16,7 +16,7 @@ exports.create = (req, res) => {
     const courses_for_student = {
         id: req.body.id,
         student_id: req.body.student_id,
-        semester: req.body.semester,
+        semester_id: req.body.semester_id,
         course_id: req.body.course_id,
         status: req.body.status,
         grade: req.body.grade
@@ -36,17 +36,16 @@ exports.create = (req, res) => {
 
 // Retrieve all Student Courses from the database.
 exports.findAll = (req, res) => {
-    student_id = req.query.student_id; //is this correct?
-    //req.query is no param string
-    let passed = student_id ? {
+    const student_id = req.query.student_id;
+    var condition = student_id ? {
         student_id: {
-            [Op.like]: '%${student_id}%'
+            [Op.like]: `%${student_id}%`
         }
     } : null;
 
     stuCourse.findAll({ 
         include: ["semester", "course"], 
-        where: pass
+        where: condition
        }) //include semester & course where studentid is
     .then(data => {
         res.send(data);

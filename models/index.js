@@ -42,9 +42,9 @@ db.major.hasMany(db.majorcourse, {
 db.majorcourse.belongsTo(db.major, {
   foreignKey: 'major_id'
 });
-//db.courses_for_student.belongsTo(db.semesters, {
-  //foreignKey: 'semester'
-//});
+db.courses_for_student.belongsTo(db.semester, {
+  foreignKey: 'semester_id'
+});
 db.courses_for_student.belongsTo(db.student, {
   foreignKey: 'student_id'
 });
